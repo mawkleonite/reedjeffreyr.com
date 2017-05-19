@@ -1,0 +1,146 @@
+@mixin skew($side: right, $deg: -20deg, $right: -15px, $left: -15px, $width: 30px, $bg: $mainBlue) {
+    position: relative;
+
+    &:before {
+        z-index: -1;
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+
+        @if $side == right {
+            right: $right;
+        }
+        @else if $side == left {
+            left: $left;
+        }
+
+        display: block;
+        width: $width;
+        background: $bg;
+        -webkit-transform: skew($deg);
+            -ms-transform: skew($deg);
+                transform: skew($deg);
+    }
+}
+
+
+//Skew 2 lightgray Righthand side
+
+@mixin skew2($side: left, $deg: -20deg, $right: -15px, $left: 15px, $width: 30px, $bg: lightgray) {
+    position: relative;
+
+    &:before {
+      z-index: -1;
+        content: '';
+        position: absolute;
+        top: 0;
+        bottom: 0;
+
+        @if $side == right {
+            right: $right;
+        }
+        @else if $side == left {
+            left: $left;
+        }
+
+        display: block;
+        width: $width;
+        background: $bg;
+        -webkit-transform: skew($deg);
+            -ms-transform: skew($deg);
+                transform: skew($deg);
+    }
+}
+
+
+//Slanted Edges
+
+@mixin angle($pseudo, $flip: false, $angle: 1.5deg) {
+  // Possible values for $pseudo are: before, after, both
+  @if $pseudo == 'before' or $pseudo == 'after' or $pseudo == 'both' {
+    position: relative;
+    z-index: 1;
+    $selector: if($pseudo == 'both', '&:before,&:after', '&:#{$pseudo}');
+
+    #{$selector} {
+      background: inherit;
+      content: '';
+      display: block;
+      height: 50%;
+      left: 0;
+      position: absolute;
+      right: 0;
+      z-index: -1;
+      -webkit-backface-visibility: hidden; // for Chrome Windows
+    }
+
+    @if $pseudo == 'before' {
+      #{$selector} {
+        top: 0;
+
+        @if $flip {
+          transform: skewY($angle * -1);
+          transform-origin: 0 0;
+        } @else {
+          transform: skewY($angle);
+          transform-origin: 100% 0;
+        }
+      }
+    }
+
+    @if $pseudo == 'after' {
+      #{$selector} {
+        bottom: 0;
+
+        @if $flip {
+          transform: skewY($angle);
+          transform-origin: 0 100%;
+        } @else {
+          transform: skewY($angle * -1);
+          transform-origin: 100%;
+        }
+      }
+    }
+
+    @if $pseudo == 'both' {
+      &:before {
+        top: 0;
+
+        @if $flip {
+          transform: skewY($angle * -1);
+          transform-origin: 0 0;
+        } @else {
+          transform: skewY($angle);
+          transform-origin: 100% 0;
+        }
+      }
+
+      &:after {
+        bottom: 0;
+
+        @if $flip {
+          transform: skewY($angle);
+          transform-origin: 0 0;
+        } @else {
+          transform: skewY($angle * -1);
+          transform-origin: 100%;
+        }
+      }
+    }
+  }
+}
+
+
+//Grid System
+
+@mixin grid($cols, $mgn){
+
+  float:left;
+  margin-right: $mgn;
+  margin-bottom: $mgn;
+  width: ((100% - (($cols - 1) * $mgn)) / $cols);
+  &:nth-child(#{$cols}n){
+    margin-right: 0;
+  }
+}
